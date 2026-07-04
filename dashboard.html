@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOUPLUS Listing Sync — Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="shell">
+  <div class="sidebar">
+    <div class="brand">YOUPLUS</div>
+    <div class="brand-sub">Listing Sync v0.1</div>
+
+    <a class="nav-item active" href="dashboard.html">Overview</a>
+    <a class="nav-item" href="#">Product Sync</a>
+    <a class="nav-item" href="#">Connected Shops</a>
+    <a class="nav-item" href="#">Order Routing</a>
+    <a class="nav-item" href="#">Settings</a>
+
+    <button class="signout" id="signout">Sign out</button>
+  </div>
+
+  <div class="main">
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Overview</div>
+        <h1>Amazon → Shopee 同期状況</h1>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="num">6</div>
+        <div class="label">Connected Shopee Shops</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">128</div>
+        <div class="label">Amazon Products Tracked</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">0</div>
+        <div class="label">Listed This Week</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">0</div>
+        <div class="label">Orders Routed</div>
+      </div>
+    </div>
+
+    <div class="shop-row">
+      <div class="shop-pill"><span class="dot"></span>youplus.br <span class="code">BR</span></div>
+      <div class="shop-pill"><span class="dot"></span>youplus.th <span class="code">TH</span></div>
+      <div class="shop-pill"><span class="dot"></span>youplus_p.ph <span class="code">PH</span></div>
+      <div class="shop-pill"><span class="dot"></span>youplus_t <span class="code">TW</span></div>
+      <div class="shop-pill"><span class="dot"></span>youplus_m.my <span class="code">MY</span></div>
+      <div class="shop-pill"><span class="dot"></span>youplusjapan.sg <span class="code">SG</span></div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Source</th>
+          <th>Category</th>
+          <th>Targets</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="productBody">
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  if (sessionStorage.getItem('ys_auth') !== '1') {
+    window.location.href = 'index.html';
+  }
+  document.getElementById('signout').addEventListener('click', function(){
+    sessionStorage.removeItem('ys_auth');
+    window.location.href = 'index.html';
+  });
+
+  const products = [
+    { name: "アニメキャラ アクリルスタンド 12cm", src: "amazon.co.jp", cat: "Anime Goods", targets: [1,1,0,1,0,1], status: "pending" },
+    { name: "N95規格 不織布マスク 50枚入", src: "amazon.co.jp", cat: "Health", targets: [1,1,1,1,1,1], status: "live" },
+    { name: "たまごボーロ 6種アソート", src: "amazon.co.jp", cat: "Japanese Food", targets: [0,1,1,0,1,1], status: "syncing" },
+    { name: "フィギュア専用 UVカットケース", src: "amazon.co.jp", cat: "Figures & Toys", targets: [1,0,0,1,0,0], status: "pending" },
+    { name: "薬用美白 化粧水 200ml", src: "amazon.co.jp", cat: "Beauty", targets: [1,1,1,0,1,1], status: "live" },
+    { name: "ベビー用 出産祝いギフトセット", src: "amazon.co.jp", cat: "Baby", targets: [0,0,1,0,1,0], status: "pending" }
+  ];
+
+  const codes = ["BR","TH","PH","TW","MY","SG"];
+  const body = document.getElementById('productBody');
+
+  products.forEach(p => {
+    const tr = document.createElement('tr');
+
+    const dots = p.targets.map((t,i) =>
+      `<span class="${t ? 'on' : ''}">${codes[i]}</span>`
+    ).join('');
+
+    const badgeLabel = { pending: "未出品", live: "出品中", syncing: "同期中" }[p.status];
+    const btnLabel = p.status === "live" ? "編集" : "Shopeeへ出品";
+    const btnDisabled = p.status === "syncing" ? "disabled" : "";
+
+    tr.innerHTML = `
+      <td><div class="prod-name">${p.name}</div></td>
+      <td><span class="prod-src">${p.src}</span></td>
+      <td>${p.cat}</td>
+      <td><div class="target-dots">${dots}</div></td>
+      <td><span class="badge ${p.status}">${badgeLabel}</span></td>
+      <td><button class="mini-btn" ${btnDisabled}>${btnLabel}</button></td>
+    `;
+    body.appendChild(tr);
+  });
+</script>
+
+</body>
+</html>

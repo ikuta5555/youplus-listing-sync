@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOUPLUS Listing Sync</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="login-side">
+    <div>
+      <div class="brand">YOUPLUS / Listing Sync</div>
+      <h1>Amazonの商品情報を、6つの市場のShopeeへ一括同期。</h1>
+    </div>
+    <div>
+      <div class="route-list">
+        <div><span class="flag">●</span>youplus.br — Brazil</div>
+        <div><span class="flag">●</span>youplus.th — Thailand</div>
+        <div><span class="flag">●</span>youplus_p.ph — Philippines</div>
+        <div><span class="flag">●</span>youplus_t — Taiwan</div>
+        <div><span class="flag">●</span>youplus_m.my — Malaysia</div>
+        <div><span class="flag">●</span>youplusjapan.sg — Singapore</div>
+      </div>
+      <div class="foot" style="margin-top:28px;">株式会社ゆうぷらす — Internal Operations Tool</div>
+    </div>
+  </div>
+
+  <div class="login-main">
+    <div class="login-card">
+      <div class="eyebrow">Sign in</div>
+      <h2>Listing Sync にログイン</h2>
+      <form id="loginForm">
+        <label for="user">Username</label>
+        <input type="text" id="user" autocomplete="username" placeholder="test_reviewer">
+        <label for="pass">Password</label>
+        <input type="password" id="pass" autocomplete="current-password" placeholder="••••••••">
+        <div class="error-msg" id="errorMsg">ユーザー名またはパスワードが違います。</div>
+        <button type="submit" class="btn">ログイン</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const VALID_USER = "test_reviewer";
+  const VALID_PASS = "Shopee2026Review!";
+
+  document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const u = document.getElementById('user').value.trim();
+    const p = document.getElementById('pass').value;
+    if (u === VALID_USER && p === VALID_PASS) {
+      sessionStorage.setItem('ys_auth', '1');
+      window.location.href = 'dashboard.html';
+    } else {
+      document.getElementById('errorMsg').style.display = 'block';
+    }
+  });
+</script>
+
+</body>
+</html>
